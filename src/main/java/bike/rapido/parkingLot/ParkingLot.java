@@ -1,17 +1,29 @@
 package bike.rapido.parkingLot;
 
 public class ParkingLot {
-    private static final int TOTAL_NO_OF_SLOTS=3;
-    private int occupiedSlots=0;
-    public String checksAvailabilityAndParksVehicle() {
-        if(occupiedSlots<TOTAL_NO_OF_SLOTS)
+    private int availableSlots;
+
+    public ParkingLot(int availableSlots)
+    {
+        this.availableSlots = availableSlots;
+    }
+
+    public boolean checksSlotAvailability() {
+        if(availableSlots>0)
+            return true;
+        else
+            return false;
+    }
+    public String decrementsSlotAvailabilityByParkingVehicle() {
+        if(checksSlotAvailability())
         {
-            occupiedSlots+=1;
-            return "Vehicle Parked";
+            availableSlots -=1;
+            return String.format("Vehicle Parked. Remaining Available Slots = %d", availableSlots);
         }
         else
-            return "No Parking Slot Available";
+            return "No Available Parking Slots";
     }
+
 
 }
 
