@@ -1,10 +1,12 @@
 package bike.rapido.parkingLot;
 
-public class Owner implements ParkingLotObserver {
-    private boolean isLotEmptyAgain = false;
+public class SecurityPersonnel implements ParkingLotObserver {
+
     private boolean isParkingLotFull = false;
+    private boolean isLotEmptyAgain = false;
 
     public boolean isLotFull() {
+
         return isParkingLotFull;
     }
 
@@ -12,11 +14,7 @@ public class Owner implements ParkingLotObserver {
         isParkingLotFull = true;
     }
 
-    public boolean isParkingLotEmptyAgain() {
-        return isLotEmptyAgain;
-    }
-
-    public void notifyParkingLotIsEmptyAgain(){
+    public void notifyParkingLotIsEmptyAgain() {
         isLotEmptyAgain = true;
     }
 }

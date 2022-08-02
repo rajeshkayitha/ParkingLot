@@ -1,52 +1,88 @@
 package bike.rapido.parkingLot;
 
-public class ParkingLot {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ParkingLot  {
     private final int totalSlots;
     private int filledSlots = 0;
+
+    private List<ParkingLotObserver> observerList = new ArrayList<>();
 
     public ParkingLot(int totalSlots) {
         this.totalSlots = totalSlots;
     }
 
+    public void addObserver(ParkingLotObserver observer) {
+        observerList.add(observer);
+    };
 
-    public String parksVehicle(Vehicle vehicle) {
-        if (totalSlots > filledSlots) {
-            if (vehicle.isVehicleParked()) {
-                return "Vehicle already parked.";
-            }
-            else {
-                vehicle.park();
-                filledSlots += 1;
-                if (filledSlots == totalSlots) {
-                    return "Vehicle Parked. \n ParkingLot Is Full.";
-                }
-                return "Vehicle Parked.";
-            }
-            }
-        else
-            return "No Available Parking Slots";
+    public void removeObserver(ParkingLotObserver observer){
+        observerList.remove(observer);
     }
 
-
-    public String unParksVehicle(Vehicle vehicle) {
-        if (filledSlots > 0) {
-            if(vehicle.isVehicleParked()) {
-                filledSlots -= 1;
-                vehicle.unPark();
-                return "Vehicle UnParked.";
-            }
-            else {
-                return "Vehicle not yet parked.";
-            }
+    public boolean parksVehicle(Vehicle vehicle) {
+        if (!isLotFull() && !vehicle.isVehicleParked()) {
+            incrementFilledSlots();
+            vehicle.park();
+            notifyLotIsFull();
+            return true;
         } else
-            return "All Slots Are Empty.";
+            return false;
     }
 
-    public Boolean isLotFull() {
+
+    public boolean unParksVehicle(Vehicle vehicle) {
+        if (!isLotEmpty() && vehicle.isVehicleParked()) {
+            if(isLotFull())
+            {
+                notifyLotIsEmptyAgain();
+            }
+            decrementFilledSlots();
+            vehicle.unPark();
+
+            return true;
+        } else
+            return false;
+    }
+
+    private void notifyLotIsEmptyAgain() {
+        for (ParkingLotObserver parkingLotObserver : observerList)
+        {
+            parkingLotObserver.notifyParkingLotIsEmptyAgain();
+        }
+    }
+
+    private boolean isLotEmpty() {
+        if (filledSlots == 0) {
+            return true;
+        } else
+            return false;
+    }
+
+    private boolean isLotFull() {
         if (filledSlots < totalSlots)
             return false;
         else
             return true;
     }
+
+    private void incrementFilledSlots() {
+        filledSlots++;
+    }
+
+    private void decrementFilledSlots() {
+        filledSlots--;
+    }
+
+    private void notifyLotIsFull() {
+        if (isLotFull()) {
+            for (ParkingLotObserver parkingLotObserver : observerList)
+            {
+                parkingLotObserver.notifyParkingLotIsFull();
+            }
+        }
+    }
+
 }
 

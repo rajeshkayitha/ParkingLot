@@ -1,142 +1,189 @@
 package bike.rapido.parkingLot;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParkingLotTest {
 
+    private Owner owner;
+    private  SecurityPersonnel securityPersonnel;
+
+    @BeforeEach
+    void setUp() {
+        owner = new Owner();
+       securityPersonnel = new SecurityPersonnel();
+    }
+
     @Test
-    void shouldReturnVehicleParkedWhenSlotAvailable() {
+    void shouldAllowVehicleToParkWhenSlotAvailable() {
         int totalSlots = 2;
         Vehicle car = new Vehicle();
 
 
-        String parkingStatus = new ParkingLot(totalSlots).parksVehicle(car);
+        boolean parkingStatus = new ParkingLot(totalSlots).parksVehicle(car);
 
-        assertEquals("Vehicle Parked.", parkingStatus);
+        assertTrue(parkingStatus);
 
     }
 
     @Test
-    void shouldReturnNoAvailabilityParkingSlotWhenSlotNotAvailable() {
+    void shouldNotAllowVehicleToParkWhenSlotNotAvailable() {
         int totalSlots = 0;
         Vehicle bike = new Vehicle();
 
-        String parkingStatus = new ParkingLot(totalSlots).parksVehicle(bike);
+        boolean parkingStatus = new ParkingLot(totalSlots).parksVehicle(bike);
 
-        assertEquals("No Available Parking Slots", parkingStatus);
+        assertFalse(parkingStatus);
 
     }
 
     @Test
-    void shouldReturnNoAvailableParkingSlotForSecondCarWhenTotalSlotsEquals1() {
+    void shouldNotAllowSecondVehicleToParkWhenTotalSlotsEquals1() {
         int totalSlots = 1;
         Vehicle car = new Vehicle();
         Vehicle bike = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);                        //FirstCar
-        String parkingStatus = parkingLot.parksVehicle(bike);
+        boolean parkingStatus = parkingLot.parksVehicle(bike);
 
-        assertEquals("No Available Parking Slots", parkingStatus);
-
+        assertFalse(parkingStatus);
     }
 
     @Test
-    void shouldReturnVehicleUnParkedWhenThereIsParkedVehicle() {
+    void shouldAllowVehicleToUnParkIfTheVehicleIsAlreadyParked() {
         int totalSlots = 5;
         Vehicle car = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);                         //Vehicle Parked
-        String parkingStatus = parkingLot.unParksVehicle(car);
+        boolean parkingStatus = parkingLot.unParksVehicle(car);
 
-        assertEquals("Vehicle UnParked.", parkingStatus);
+        assertTrue(parkingStatus);
 
     }
 
     @Test
-    void shouldReturnAllSlotsAreEmptyWhenNoVehicleIsParked() {
+    void shouldNotAllowVehicleToUnParkWhenNoSlotIsFilled() {
         int totalSlots = 2;
         Vehicle car = new Vehicle();
 
-        String parkingStatus = new ParkingLot(totalSlots).unParksVehicle(car);
+        boolean parkingStatus = new ParkingLot(totalSlots).unParksVehicle(car);
 
-        assertEquals("All Slots Are Empty.", parkingStatus);
+       assertFalse(parkingStatus);
 
     }
 
 
     @Test
-    void shouldNotAllowVehicleToParkedWhenSameVehicleAskedToParkAgain() {
+    void shouldNotAllowVehicleToParkWhenSameVehicleAskedToParkAgain() {
         int totalSlots=2;
         Vehicle car = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);
-        String parkingStatus = parkingLot.parksVehicle(car);
+        boolean parkingStatus = parkingLot.parksVehicle(car);
 
-        assertEquals("Vehicle already parked." , parkingStatus);
+       assertFalse(parkingStatus);
     }
 
     @Test
-    void shouldNotAllowVehicleToUnParkWhenNotParkedVehicleAskedToUnParkWithNoEmptySlots() {
+    void shouldNotAllowVehicleToUnParkIfTheVehicleNotParkedYet() {
         int totalSlots=2;
         Vehicle car = new Vehicle();
         Vehicle auto = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);
-        String parkingStatus = parkingLot.unParksVehicle(auto);
+        boolean parkingStatus = parkingLot.unParksVehicle(auto);
 
-        assertEquals("Vehicle not yet parked." , parkingStatus);
+        assertFalse(parkingStatus);
     }
 
     @Test
-    void shouldReturnSlotIsFullWhenAllSlotsAreFilled() {
-        int totalSlots = 3;
+    void shouldNotifyOwnerWhenParkingLotIsFull() {
+        int totalSlots=2;
         Vehicle car = new Vehicle();
-        Vehicle bike = new Vehicle();
+        Vehicle auto = new Vehicle();
+
+        ParkingLot parkingLot = new ParkingLot(totalSlots);
+        parkingLot.addObserver(owner);
+        parkingLot.parksVehicle(car);
+        boolean parkingStatus = parkingLot.parksVehicle(auto);
+
+        assertTrue(parkingStatus);
+        assertTrue(owner.isLotFull());
+    }
+
+    @Test
+    void shouldNotNotifyOwnerWhenParkingLotIsNotFull() {
+        int totalSlots=2;
+        Vehicle car = new Vehicle();
+
+        ParkingLot parkingLot = new ParkingLot(totalSlots);
+        parkingLot.addObserver(owner);
+        boolean parkingStatus = parkingLot.parksVehicle(car);
+
+        assertTrue(parkingStatus);
+        assertFalse(owner.isLotFull());
+    }
+
+    @Test
+    void shouldNotifySecurityPersonalWhenParkingLotIsFull() {
+        int totalSlots=2;
+        Vehicle car = new Vehicle();
         Vehicle auto = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);
-        parkingLot.parksVehicle(bike);
-        String parkingStatus = parkingLot.parksVehicle(auto);
+        parkingLot.addObserver(securityPersonnel);
+        boolean parkingStatus = parkingLot.parksVehicle(auto);
 
-        assertEquals("Vehicle Parked. \n ParkingLot Is Full." , parkingStatus);
+        assertTrue(parkingStatus);
+        assertTrue(securityPersonnel.isLotFull());
     }
 
     @Test
-    void shouldReturnTrueIfParkingLotIsFull() {
-        int totalSlots = 3;
+    void shouldNotNotifySecurityPersonalWhenParkingLotIsNotFull() {
+        int totalSlots=2;
         Vehicle car = new Vehicle();
-        Vehicle bike = new Vehicle();
-        Vehicle auto = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
-        parkingLot.parksVehicle(car);
-        parkingLot.parksVehicle(bike);
-        parkingLot.parksVehicle(auto);
-        Boolean expectedStatus = parkingLot.isLotFull();
+        boolean parkingStatus = parkingLot.parksVehicle(car);
+        parkingLot.addObserver(securityPersonnel);
 
-        assertTrue(expectedStatus);
+        assertTrue(parkingStatus);
+        assertFalse(securityPersonnel.isLotFull());
     }
 
     @Test
-    void shouldReturnFalseIfLotIsNotFull() {
-        int totalSlots = 3;
+    void shouldNotifyLotOwnerWhenParkingLotHasSpaceAgain() {
+        int totalSlots = 1;
         Vehicle car = new Vehicle();
-        Vehicle bike = new Vehicle();
 
         ParkingLot parkingLot = new ParkingLot(totalSlots);
         parkingLot.parksVehicle(car);
-        parkingLot.parksVehicle(bike);
-        Boolean expectedStatus = parkingLot.isLotFull();
+        parkingLot.addObserver(owner);
+        boolean parkingStatus = parkingLot.unParksVehicle(car);
 
-        assertFalse(expectedStatus);
+        assertTrue(parkingStatus);
+        assertTrue(owner.isParkingLotEmptyAgain());
 
     }
 
+    @Test
+    void shouldNotNotifyLotOwnerApartWhenLotHasSpaceAgain() {
+        int totalSlots = 2;
+        Vehicle car = new Vehicle();
+
+        ParkingLot parkingLot = new ParkingLot(totalSlots);
+        boolean parkingStatus = parkingLot.parksVehicle(car);
+        parkingLot.addObserver(owner);
+
+        assertTrue(parkingStatus);
+        assertFalse(owner.isParkingLotEmptyAgain());
+
+    }
 }
