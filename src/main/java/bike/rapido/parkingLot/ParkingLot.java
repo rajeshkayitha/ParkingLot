@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLot  {
-    private final int totalSlots;
-    private int filledSlots = 0;
-
+    private int capacity;
     private final List<ParkingLotObserver> observerList = new ArrayList<>();
 
-    public ParkingLot(int totalSlots) {
-        this.totalSlots = totalSlots;
+    public ParkingLot(int capacity) {
+        this.capacity = capacity;
     }
 
     public void addObserver(ParkingLotObserver observer) {
@@ -23,7 +21,7 @@ public class ParkingLot  {
 
     public boolean parksVehicle(Vehicle vehicle) {
         if (!isLotFull() && !vehicle.isVehicleParked()) {
-            incrementFilledSlots();
+            decrementCapacity();
             vehicle.park();
             notifyLotIsFull();
             return true;
@@ -33,12 +31,12 @@ public class ParkingLot  {
 
 
     public boolean unParksVehicle(Vehicle vehicle) {
-        if (!isLotEmpty() && vehicle.isVehicleParked()) {
+        if (vehicle.isVehicleParked()) {
             if(isLotFull())
             {
                 notifyLotIsEmptyAgain();
             }
-            decrementFilledSlots();
+            incrementCapacity();
             vehicle.unPark();
 
             return true;
@@ -53,26 +51,19 @@ public class ParkingLot  {
         }
     }
 
-    private boolean isLotEmpty() {
-        if (filledSlots == 0) {
-            return true;
-        } else
-            return false;
-    }
-
     private boolean isLotFull() {
-        if (filledSlots < totalSlots)
-            return false;
-        else
+        if ( capacity==0)
             return true;
+        else
+            return false;
     }
 
-    private void incrementFilledSlots() {
-        filledSlots++;
+    private void incrementCapacity() {
+        capacity++;
     }
 
-    private void decrementFilledSlots() {
-        filledSlots--;
+    private void decrementCapacity() {
+        capacity--;
     }
 
     private void notifyLotIsFull() {
