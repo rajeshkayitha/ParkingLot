@@ -7,7 +7,7 @@ public class ParkingLot  {
     private final int totalSlots;
     private int filledSlots = 0;
 
-    private List<ParkingLotObserver> observerList = new ArrayList<>();
+    private final List<ParkingLotObserver> observerList = new ArrayList<>();
 
     public ParkingLot(int totalSlots) {
         this.totalSlots = totalSlots;
