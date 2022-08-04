@@ -24,12 +24,12 @@ class ParkingLotTest {
     }
 
     @Test
-    void shouldAllowVehicleToParkWhenSlotAvailable() {
+    void shouldAllowVehicleToParkWhenSlotIsAvailable() {
         int totalSlots = 2;
 
-        boolean parkingStatus = new ParkingLot(totalSlots).parksVehicle(car1);
+        boolean isVehicleParked = new ParkingLot(totalSlots).parksVehicle(car1);
 
-        assertTrue(parkingStatus);
+        assertTrue(isVehicleParked);
 
     }
 
@@ -37,45 +37,22 @@ class ParkingLotTest {
     void shouldNotAllowVehicleToParkWhenSlotNotAvailable() {
         int totalSlots = 0;
 
-        boolean parkingStatus = new ParkingLot(totalSlots).parksVehicle(car1);
+        boolean isVehicleParked = new ParkingLot(totalSlots).parksVehicle(car1);
 
-        assertFalse(parkingStatus);
+        assertFalse(isVehicleParked);
 
     }
 
     @Test
-    void shouldNotAllowSecondVehicleToParkWhenTotalSlotsEquals1() {
+    void shouldNotAllowVehicleToParkAfterAllSlotsGetsFilled() {
         int totalSlots = 1;
         ParkingLot parkingLot = new ParkingLot(totalSlots);
-
         parkingLot.parksVehicle(car1);
-        boolean parkingStatus = parkingLot.parksVehicle(car2);
 
-        assertFalse(parkingStatus);
+        boolean isVehicleParked = parkingLot.parksVehicle(car2);
+
+        assertFalse(isVehicleParked);
     }
-
-    @Test
-    void shouldAllowVehicleToUnParkIfTheVehicleIsAlreadyParked() {
-        int totalSlots = 5;
-        ParkingLot parkingLot = new ParkingLot(totalSlots);
-
-        parkingLot.parksVehicle(car1);
-        boolean parkingStatus = parkingLot.unParksVehicle(car1);
-
-        assertTrue(parkingStatus);
-
-    }
-
-    @Test
-    void shouldNotAllowVehicleToUnParkWhenNoSlotIsFilled() {
-        int totalSlots = 2;
-
-        boolean parkingStatus = new ParkingLot(totalSlots).unParksVehicle(car1);
-
-        assertFalse(parkingStatus);
-
-    }
-
 
     @Test
     void shouldNotAllowVehicleToParkWhenSameVehicleAskedToParkAgain() {
@@ -83,33 +60,46 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(totalSlots);
 
         parkingLot.parksVehicle(car1);
-        boolean parkingStatus = parkingLot.parksVehicle(car1);
+        boolean isVehicleParked = parkingLot.parksVehicle(car1);
 
-        assertFalse(parkingStatus);
+        assertFalse(isVehicleParked);
     }
 
     @Test
-    void shouldNotAllowVehicleToUnParkIfTheVehicleNotParkedYet() {
+    void shouldAllowVehicleToUnParkIfTheVehicleIsAlreadyParked() {
+        int totalSlots = 5;
+        ParkingLot parkingLot = new ParkingLot(totalSlots);
+        parkingLot.parksVehicle(car1);
+
+        boolean isVehicleUnParked = parkingLot.unParksVehicle(car1);
+
+        assertTrue(isVehicleUnParked);
+
+    }
+
+    @Test
+    void shouldNotAllowVehicleToUnParkIfTheVehicleIsNotParkedYet() {
         int totalSlots = 2;
         ParkingLot parkingLot = new ParkingLot(totalSlots);
 
         parkingLot.parksVehicle(car1);
-        boolean parkingStatus = parkingLot.unParksVehicle(car2);
+        boolean isVehicleUnParked = parkingLot.unParksVehicle(car2);
 
-        assertFalse(parkingStatus);
+        assertFalse(isVehicleUnParked);
     }
 
     @Test
     void shouldNotifyOwnerWhenParkingLotIsFull() {
         int totalSlots = 2;
         ParkingLot parkingLot = new ParkingLot(totalSlots);
-
         parkingLot.addObserver(owner);
         parkingLot.parksVehicle(car1);
+
         boolean parkingStatus = parkingLot.parksVehicle(car2);
+        boolean isNotifiedLotIsFull = owner.isLotFull();
 
         assertTrue(parkingStatus);
-        assertTrue(owner.isLotFull());
+        assertTrue(isNotifiedLotIsFull);
     }
 
     @Test
@@ -184,7 +174,7 @@ class ParkingLotTest {
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
 
         parkingLots.add(parkingLot);
-        boolean parkingStatus =parkingAttendant.parksTheVehicle(parkingLots,car1);
+        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car1);
 
         assertTrue(parkingStatus);
 
@@ -200,8 +190,8 @@ class ParkingLotTest {
 
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots,car1);
-        boolean parkingStatus =parkingAttendant.parksTheVehicle(parkingLots,car2);
+        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car2);
 
         assertTrue(parkingStatus);
     }
@@ -217,16 +207,16 @@ class ParkingLotTest {
 
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots,car1);
-        parkingAttendant.parksTheVehicle(parkingLots,car2);
-        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots,car3);
+        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        parkingAttendant.parksTheVehicle(parkingLots, car2);
+        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car3);
 
         assertFalse(parkingStatus);
     }
 
     @Test
     void shouldUnParkParkedVehicleWhenParkingAttendedAskedToUnParkVehicle() {
-        int totalSlots=1;
+        int totalSlots = 1;
         ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(totalSlots);
         ParkingLot parkingLot2 = new ParkingLot(totalSlots);
@@ -234,15 +224,15 @@ class ParkingLotTest {
 
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots,car1);
-        boolean parkingStatus=parkingAttendant.UnParksTheVehicle(car1);
+        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car1);
 
         assertTrue(parkingStatus);
     }
 
     @Test
     void shouldNotAllowToUnParkVehicleWhichIsNotParkedYetByParkingAttended() {
-        int totalSlots=1;
+        int totalSlots = 1;
         ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(totalSlots);
         ParkingLot parkingLot2 = new ParkingLot(totalSlots);
@@ -250,8 +240,8 @@ class ParkingLotTest {
 
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots,car1);
-        boolean parkingStatus=parkingAttendant.UnParksTheVehicle(car2);
+        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car2);
 
         assertFalse(parkingStatus);
     }
