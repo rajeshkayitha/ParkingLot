@@ -24,8 +24,8 @@ public class ParkingAttendedTest {
         ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
-
         parkingLots.add(parkingLot);
+
         boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car1);
 
         assertTrue(parkingStatus);
@@ -39,10 +39,10 @@ public class ParkingAttendedTest {
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
-
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         parkingAttendant.parksTheVehicle(parkingLots, car1);
+
         boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car2);
 
         assertTrue(parkingStatus);
@@ -54,13 +54,13 @@ public class ParkingAttendedTest {
         ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
-        ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         Vehicle car3 = new Vehicle();
-
+        ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         parkingAttendant.parksTheVehicle(parkingLots, car1);
         parkingAttendant.parksTheVehicle(parkingLots, car2);
+
         boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car3);
 
         assertFalse(parkingStatus);
@@ -73,10 +73,10 @@ public class ParkingAttendedTest {
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
-
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         parkingAttendant.parksTheVehicle(parkingLots, car1);
+
         boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car1);
 
         assertTrue(parkingStatus);
@@ -89,10 +89,10 @@ public class ParkingAttendedTest {
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
-
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         parkingAttendant.parksTheVehicle(parkingLots, car1);
+
         boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car2);
 
         assertFalse(parkingStatus);
