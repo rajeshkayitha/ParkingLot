@@ -11,6 +11,10 @@ public class ParkingLot  {
         this.capacity = capacity;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     public void addObserver(ParkingLotObserver observer) {
         observerList.add(observer);
     };

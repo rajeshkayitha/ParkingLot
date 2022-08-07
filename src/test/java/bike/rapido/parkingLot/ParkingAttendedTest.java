@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ParkingAttendedTest {
 
@@ -19,41 +18,28 @@ public class ParkingAttendedTest {
         car2 = new Vehicle();
     }
     @Test
-    void shouldParkVehicleWhenParkingAttendedAskedToParkTheVehicle() {
-        int capacity = 2;
+    void shouldParkVehicleInMaxCapacityParkingLotWhenParkingAttendedAskedToParkTheVehicle() {
         ParkingAttendant parkingAttendant = new ParkingAttendant();
-        ParkingLot parkingLot = new ParkingLot(capacity);
-        ArrayList<ParkingLot> parkingLots = new ArrayList<>();
-        parkingLots.add(parkingLot);
-
-        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car1);
-
-        assertTrue(parkingStatus);
-
-    }
-
-    @Test
-    void shouldParkVehicleInLotWithSlotsAvailableWhenParkingAttendedAskedToParkVehicle() {
-        int capacity = 1;
-        ParkingAttendant parkingAttendant = new ParkingAttendant();
-        ParkingLot parkingLot1 = new ParkingLot(capacity);
-        ParkingLot parkingLot2 = new ParkingLot(capacity);
+        ParkingLot parkingLot1 = new ParkingLot(2);
+        ParkingLot parkingLot2 = new ParkingLot(3);
+        Vehicle car3 = new Vehicle();
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        parkingAttendant.parksTheVehicle(parkingLots,car1);
+        parkingAttendant.parksTheVehicle(parkingLots,car2);
 
-        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car2);
+        ParkingLot vehicleParkedIn = parkingAttendant.parksTheVehicle(parkingLots, car3);
 
-        assertTrue(parkingStatus);
+        assertEquals(parkingLot2,vehicleParkedIn);
+
     }
 
-    @Test
-    void shouldNotAllowToParkVehicleByParkingAttendedWhenAllLotsAreFull() {
-        int capacity = 1;
+      @Test
+      void shouldNotAllowToParkVehicleByParkingAttendedWhenAllLotsAreFull() {
         ParkingAttendant parkingAttendant = new ParkingAttendant();
-        ParkingLot parkingLot1 = new ParkingLot(capacity);
-        ParkingLot parkingLot2 = new ParkingLot(capacity);
+        ParkingLot parkingLot1 = new ParkingLot(1);
+        ParkingLot parkingLot2 = new ParkingLot(1);
         Vehicle car3 = new Vehicle();
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
@@ -61,9 +47,9 @@ public class ParkingAttendedTest {
         parkingAttendant.parksTheVehicle(parkingLots, car1);
         parkingAttendant.parksTheVehicle(parkingLots, car2);
 
-        boolean parkingStatus = parkingAttendant.parksTheVehicle(parkingLots, car3);
+        ParkingLot vehicleParkedIn = parkingAttendant.parksTheVehicle(parkingLots, car3);
 
-        assertFalse(parkingStatus);
+        assertNull(vehicleParkedIn);
     }
 
     @Test

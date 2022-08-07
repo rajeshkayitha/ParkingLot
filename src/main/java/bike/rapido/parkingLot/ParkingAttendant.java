@@ -1,24 +1,39 @@
 package bike.rapido.parkingLot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class ParkingAttendant {
+    private final HashMap<Vehicle, ParkingLot> vehicleParkingLotHashMap = new HashMap<>();
+
+    public ParkingLot parksTheVehicle(ArrayList<ParkingLot> parkingLots, Vehicle car) {
+        ParkingLot lotWithMaximumCapacity = getMaximumCapacityParkingLot(parkingLots);
+        if(lotWithMaximumCapacity!=null) {
+            lotWithMaximumCapacity.parksVehicle(car);
+            vehicleParkingLotHashMap.put(car, lotWithMaximumCapacity);
+            return lotWithMaximumCapacity;
+        }
+        else return null;
+    }
 
 
-    public boolean parksTheVehicle(ArrayList<ParkingLot> parkingLots, Vehicle car1) {
-        for (ParkingLot parkingLot : parkingLots) {
-            boolean isVehicleParked = parkingLot.parksVehicle(car1);
-            if (isVehicleParked) {
-                car1.parkingIn(parkingLot);
-                return true;
+    private ParkingLot getMaximumCapacityParkingLot(ArrayList<ParkingLot> parkingLots) {
+        int maxCapacityOfLots = 0;
+        ParkingLot lotWithMaxCapacity=null;
+        for(ParkingLot parkingLot:parkingLots){
+            if(maxCapacityOfLots<parkingLot.getCapacity()){
+                maxCapacityOfLots=parkingLot.getCapacity();
+                lotWithMaxCapacity = parkingLot;
             }
         }
-        return false;
+        return lotWithMaxCapacity;
     }
 
     public boolean UnParksTheVehicle(Vehicle car) {
-        if (car.isVehicleParked()) {
-            ParkingLot parkingLot = car.parkedIn();
+        if (vehicleParkingLotHashMap.containsKey(car)) {
+            ParkingLot parkingLot = vehicleParkingLotHashMap.get(car);
+            vehicleParkingLotHashMap.remove(car);
             return parkingLot.unParksVehicle(car);
         } else
             return false;
