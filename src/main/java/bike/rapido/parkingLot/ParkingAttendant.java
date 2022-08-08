@@ -1,34 +1,37 @@
 package bike.rapido.parkingLot;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 
 public class ParkingAttendant {
     private final HashMap<Vehicle, ParkingLot> vehicleParkingLotHashMap = new HashMap<>();
+    private final ArrayList<ParkingLot> parkingLots;
 
-    public ParkingLot parksTheVehicle(ArrayList<ParkingLot> parkingLots, Vehicle car) {
-        ParkingLot lotWithMaximumCapacity = getMaximumCapacityParkingLot(parkingLots);
-        if(lotWithMaximumCapacity!=null) {
-            lotWithMaximumCapacity.parksVehicle(car);
-            vehicleParkingLotHashMap.put(car, lotWithMaximumCapacity);
-            return lotWithMaximumCapacity;
-        }
-        else return null;
+    private ParkingStrategy parkingStrategy;
+
+    public void setParkingStrategy(ParkingStrategy parkingStrategy) {
+        this.parkingStrategy = parkingStrategy;
+    }
+
+    public ParkingAttendant(ArrayList<ParkingLot> parkingLots) {
+        this.parkingLots = parkingLots;
+    }
+
+    public Optional<ParkingLot> parkTheVehicle(Vehicle car) {
+       Optional<ParkingLot> parkingLotToPark = parkingStrategy.chooseParkingLotToPark();
+       if(parkingLotToPark.isPresent()) {
+           parkingLotToPark.get().parksVehicle(car);
+           vehicleParkingLotHashMap.put(car, parkingLotToPark.get());
+           return parkingLotToPark;
+       }else{
+           return Optional.empty();
+       }
     }
 
 
-    private ParkingLot getMaximumCapacityParkingLot(ArrayList<ParkingLot> parkingLots) {
-        int maxCapacityOfLots = 0;
-        ParkingLot lotWithMaxCapacity=null;
-        for(ParkingLot parkingLot:parkingLots){
-            if(maxCapacityOfLots<parkingLot.getCapacity()){
-                maxCapacityOfLots=parkingLot.getCapacity();
-                lotWithMaxCapacity = parkingLot;
-            }
-        }
-        return lotWithMaxCapacity;
-    }
 
     public boolean UnParksTheVehicle(Vehicle car) {
         if (vehicleParkingLotHashMap.containsKey(car)) {

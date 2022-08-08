@@ -3,6 +3,7 @@ package bike.rapido.parkingLot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -42,7 +43,7 @@ public class ParkingLotNotificationTest {
         boolean isVehicleParked = parkingLot.parksVehicle(car1);
 
         assertTrue(isVehicleParked);
-        verify(ownerMock,never()).notifyParkingLotIsFull();
+        verify(ownerMock, never()).notifyParkingLotIsFull();
     }
 
     @Test
@@ -69,7 +70,7 @@ public class ParkingLotNotificationTest {
         boolean isVehicleParked = parkingLot.parksVehicle(car1);
 
         assertTrue(isVehicleParked);
-        verify(securityPersonnelMock,never()).notifyParkingLotIsFull();
+        verify(securityPersonnelMock, never()).notifyParkingLotIsFull();
     }
 
     @Test
@@ -98,9 +99,8 @@ public class ParkingLotNotificationTest {
         boolean isVehicleParked = parkingLot.parksVehicle(car1);
 
 
-
         assertTrue(isVehicleParked);
-        verify(ownerMock,never()).notifyParkingLotIsEmptyAgain();
+        verify(ownerMock, never()).notifyParkingLotIsEmptyAgain();
 
     }
 

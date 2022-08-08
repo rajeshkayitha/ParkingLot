@@ -1,22 +1,15 @@
 package bike.rapido.parkingLot;
 
 public class Owner implements ParkingLotObserver {
-    private boolean isLotEmptyAgain = false;
-    private boolean isParkingLotFull = false;
 
-    public boolean isLotFull() {
-        return isParkingLotFull;
-    }
+
 
     public void notifyParkingLotIsFull() {
-        isParkingLotFull = true;
+        System.out.println("Put full sign board");
     }
 
-    public boolean isParkingLotEmptyAgain() {
-        return isLotEmptyAgain;
-    }
 
     public void notifyParkingLotIsEmptyAgain(){
-        isLotEmptyAgain = true;
+        System.out.println("Take out full sign board");
     }
 }

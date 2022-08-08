@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,68 +20,92 @@ public class ParkingAttendedTest {
     }
     @Test
     void shouldParkVehicleInMaxCapacityParkingLotWhenParkingAttendedAskedToParkTheVehicle() {
-        ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(2);
         ParkingLot parkingLot2 = new ParkingLot(3);
         Vehicle car3 = new Vehicle();
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots,car1);
-        parkingAttendant.parksTheVehicle(parkingLots,car2);
+        ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
+        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy(parkingLots));
+        parkingAttendant.parkTheVehicle(car1);
+        parkingAttendant.parkTheVehicle(car2);
 
-        ParkingLot vehicleParkedIn = parkingAttendant.parksTheVehicle(parkingLots, car3);
+        Optional<ParkingLot> vehicleParkedIn = parkingAttendant.parkTheVehicle(car3);
 
-        assertEquals(parkingLot2,vehicleParkedIn);
+        assertTrue(vehicleParkedIn.isPresent());
+        assertEquals(parkingLot2,vehicleParkedIn.get());
+
+    }
+    @Test
+    void shouldParkVehicleInFirstNonEmptyParkingLotWhenParkingAttendedAskedToParkTheVehicle() {
+        ParkingLot parkingLot1 = new ParkingLot(3);
+        ParkingLot parkingLot2 = new ParkingLot(3);
+        Vehicle car3 = new Vehicle();
+        ArrayList<ParkingLot> parkingLots = new ArrayList<>();
+        parkingLots.add(parkingLot1);
+        parkingLots.add(parkingLot2);
+        ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.parkTheVehicle(car1);
+        parkingAttendant.parkTheVehicle(car2);
+
+        Optional<ParkingLot> vehicleParkedIn = parkingAttendant.parkTheVehicle(car3);
+
+        assertTrue(vehicleParkedIn.isPresent());
+        assertEquals(parkingLot1,vehicleParkedIn.get());
 
     }
 
       @Test
       void shouldNotAllowToParkVehicleByParkingAttendedWhenAllLotsAreFull() {
-        ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(1);
         ParkingLot parkingLot2 = new ParkingLot(1);
         Vehicle car3 = new Vehicle();
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots, car1);
-        parkingAttendant.parksTheVehicle(parkingLots, car2);
+        ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.parkTheVehicle(car1);
+        parkingAttendant.parkTheVehicle(car2);
 
-        ParkingLot vehicleParkedIn = parkingAttendant.parksTheVehicle(parkingLots, car3);
+        Optional<ParkingLot> vehicleParkedIn = parkingAttendant.parkTheVehicle(car3);
 
-        assertNull(vehicleParkedIn);
+        assertFalse(vehicleParkedIn.isPresent());
     }
 
     @Test
     void shouldUnParkParkedVehicleWhenParkingAttendedAskedToUnParkVehicle() {
         int capacity = 1;
-        ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.parkTheVehicle(car1);
 
-        boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car1);
+        boolean isVehicleUnParked = parkingAttendant.UnParksTheVehicle(car1);
 
-        assertTrue(parkingStatus);
+        assertTrue(isVehicleUnParked);
     }
 
     @Test
     void shouldNotAllowToUnParkVehicleWhichIsNotParkedYetByParkingAttended() {
         int capacity = 1;
-        ParkingAttendant parkingAttendant = new ParkingAttendant();
         ParkingLot parkingLot1 = new ParkingLot(capacity);
         ParkingLot parkingLot2 = new ParkingLot(capacity);
         ArrayList<ParkingLot> parkingLots = new ArrayList<>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        parkingAttendant.parksTheVehicle(parkingLots, car1);
+        ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
+        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy(parkingLots));
+        parkingAttendant.parkTheVehicle(car1);
 
-        boolean parkingStatus = parkingAttendant.UnParksTheVehicle(car2);
+        boolean isVehicleUnParked = parkingAttendant.UnParksTheVehicle(car2);
 
-        assertFalse(parkingStatus);
+        assertFalse(isVehicleUnParked);
     }
 }
