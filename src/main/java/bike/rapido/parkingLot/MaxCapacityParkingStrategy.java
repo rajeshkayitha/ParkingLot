@@ -5,14 +5,8 @@ import java.util.Optional;
 
 public class MaxCapacityParkingStrategy implements ParkingStrategy{
 
-    private ArrayList<ParkingLot> parkingLots;
-
-    public MaxCapacityParkingStrategy(ArrayList<ParkingLot> parkingLots) {
-        this.parkingLots = parkingLots;
-    }
-
     @Override
-    public Optional<ParkingLot> chooseParkingLotToPark() {
+    public Optional<ParkingLot> chooseParkingLotToPark(ArrayList<ParkingLot> parkingLots) {
         int maxCapacityOfLots = 0;
         ParkingLot lotWithMaxCapacity=null;
         for(ParkingLot parkingLot: parkingLots){

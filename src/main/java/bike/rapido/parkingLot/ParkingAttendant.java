@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class ParkingAttendant {
     private final HashMap<Vehicle, ParkingLot> vehicleParkingLotHashMap = new HashMap<>();
-    private final ArrayList<ParkingLot> parkingLots;
+    private final  ArrayList<ParkingLot> parkingLots;
 
     private ParkingStrategy parkingStrategy;
 
@@ -21,7 +21,7 @@ public class ParkingAttendant {
     }
 
     public Optional<ParkingLot> parkTheVehicle(Vehicle car) {
-       Optional<ParkingLot> parkingLotToPark = parkingStrategy.chooseParkingLotToPark();
+       Optional<ParkingLot> parkingLotToPark = parkingStrategy.chooseParkingLotToPark(parkingLots);
        if(parkingLotToPark.isPresent()) {
            parkingLotToPark.get().parksVehicle(car);
            vehicleParkingLotHashMap.put(car, parkingLotToPark.get());

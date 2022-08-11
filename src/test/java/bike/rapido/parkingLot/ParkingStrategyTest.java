@@ -27,7 +27,7 @@ public class ParkingStrategyTest {
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
-        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy(parkingLots));
+        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy());
         parkingAttendant.parkTheVehicle(car1);
         parkingAttendant.parkTheVehicle(car2);
 
@@ -46,7 +46,7 @@ public class ParkingStrategyTest {
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
-        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy());
         parkingAttendant.parkTheVehicle(car1);
         parkingAttendant.parkTheVehicle(car2);
 
@@ -66,7 +66,7 @@ public class ParkingStrategyTest {
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
-        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy());
         parkingAttendant.parkTheVehicle(car1);
         parkingAttendant.parkTheVehicle(car2);
 
@@ -84,7 +84,7 @@ public class ParkingStrategyTest {
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
-        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy(parkingLots));
+        parkingAttendant.setParkingStrategy(new FirstFreeFillingStrategy());
         parkingAttendant.parkTheVehicle(car1);
 
         boolean isVehicleUnParked = parkingAttendant.UnParksTheVehicle(car1);
@@ -101,7 +101,7 @@ public class ParkingStrategyTest {
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
         ParkingAttendant parkingAttendant = new ParkingAttendant(parkingLots);
-        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy(parkingLots));
+        parkingAttendant.setParkingStrategy(new MaxCapacityParkingStrategy());
         parkingAttendant.parkTheVehicle(car1);
 
         boolean isVehicleUnParked = parkingAttendant.UnParksTheVehicle(car2);
